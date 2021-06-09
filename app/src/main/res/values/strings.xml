@@ -1,4 +1,9 @@
 <resources>
+    <string-array name="categories">
+        <item>Praca</item>
+        <item>Zakupy</item>
+        <item>Inne</item>
+    </string-array>
     <string name="app_name">ToDoApp</string>
     <string name="addedit_clock_image_button_description">Zmień wybraną godzinę</string>
     <string name="name">Nazwa</string>
@@ -6,4 +11,10 @@
     <string name="addeidt_category_selector_action_label">Wybierz kategorię</string>
     <string name="date">Data</string>
     <string name="add_new_item">Dodaj nowy element</string>
+    <string name="save">Zapisz</string>
+    <string name="cancel">Anuluj</string>
+    <string name="saved">Zapisano</string>
+    <string name="add">Dodaj element</string>
+    <string name="edit">Edytuj element</string>
+    <string name="name_error">Nazwa nie może być pusta</string>
 </resources>

@@ -1,9 +1,12 @@
 package com.example.todoapp.database.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity
+@Parcelize
 data class Item(
     @PrimaryKey
     val id: Long?,
@@ -11,4 +14,4 @@ data class Item(
     val name: String,
     val category: String,
     val date: String
-)
+) : Parcelable
