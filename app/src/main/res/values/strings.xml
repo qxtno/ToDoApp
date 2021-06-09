@@ -17,4 +17,6 @@
     <string name="add">Dodaj element</string>
     <string name="edit">Edytuj element</string>
     <string name="name_error">Nazwa nie może być pusta</string>
+    <string name="save_error">Wystąpił błąd przy zapisywaniu</string>
+    <string name="try_again">Spróbuj ponownie</string>
 </resources>

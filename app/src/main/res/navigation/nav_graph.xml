@@ -6,14 +6,43 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.todoapp.ui.items.MainFragment"
-        android:label="MainFragment" >
+        android:name="com.example.todoapp.ui.items.MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_addEditFragment"
             app:destination="@id/addEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEditFragment"
-        android:name="com.example.todoapp.ui.addedit.AddEditFragment"
-        android:label="AddEditFragment" />
+        android:name="com.example.todoapp.ui.addedit.AddEditFragment">
+        <argument
+            android:name="item"
+            android:defaultValue="@null"
+            app:argType="com.example.todoapp.database.model.Item"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_addEditFragment_to_datePickerDialog"
+            app:destination="@id/datePickerDialog" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_addEditFragment_to_insertErrorDialog"
+            app:destination="@id/insertErrorDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/datePickerDialog"
+        android:name="com.example.todoapp.ui.addedit.DatePickerDialog">
+        <argument
+            android:name="date"
+            android:defaultValue="@null"
+            app:argType="com.example.todoapp.utils.models.Date"
+            app:nullable="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/insertErrorDialog"
+        android:name="com.example.todoapp.ui.addedit.InsertErrorDialog">
+        <argument
+            android:name="error"
+            app:argType="string" />
+    </dialog>
 </navigation>

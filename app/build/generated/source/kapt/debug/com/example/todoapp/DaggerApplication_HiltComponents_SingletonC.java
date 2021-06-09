@@ -7,10 +7,19 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+import com.example.todoapp.database.Database;
+import com.example.todoapp.database.dao.ItemDao;
 import com.example.todoapp.di.AppModule;
+import com.example.todoapp.di.AppModule_ProvideDatabaseFactory;
+import com.example.todoapp.di.AppModule_ProvideItemDaoFactory;
 import com.example.todoapp.ui.MainActivity;
-import com.example.todoapp.ui.items.MainFragment;
 import com.example.todoapp.ui.addedit.AddEditFragment;
+import com.example.todoapp.ui.addedit.AddEditFragmentViewModel;
+import com.example.todoapp.ui.addedit.AddEditFragmentViewModel_HiltModules_KeyModule_ProvideFactory;
+import com.example.todoapp.ui.addedit.InsertErrorDialog;
+import com.example.todoapp.ui.items.MainFragment;
+import com.example.todoapp.ui.items.MainFragmentViewModel;
+import com.example.todoapp.ui.items.MainFragmentViewModel_HiltModules_KeyModule_ProvideFactory;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
 import dagger.hilt.android.internal.builders.ActivityRetainedComponentBuilder;
@@ -26,9 +35,10 @@ import dagger.hilt.android.internal.modules.ApplicationContextModule;
 import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideApplicationFactory;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.DoubleCheck;
+import dagger.internal.MapBuilder;
 import dagger.internal.MemoizedSentinel;
 import dagger.internal.Preconditions;
-import java.util.Collections;
+import dagger.internal.SetBuilder;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Provider;
@@ -41,6 +51,8 @@ import javax.inject.Provider;
 public final class DaggerApplication_HiltComponents_SingletonC extends Application_HiltComponents.SingletonC {
   private final ApplicationContextModule applicationContextModule;
 
+  private volatile Object database = new MemoizedSentinel();
+
   private DaggerApplication_HiltComponents_SingletonC(
       ApplicationContextModule applicationContextModuleParam) {
     this.applicationContextModule = applicationContextModuleParam;
@@ -48,6 +60,24 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  private Database database() {
+    Object local = database;
+    if (local instanceof MemoizedSentinel) {
+      synchronized (local) {
+        local = database;
+        if (local instanceof MemoizedSentinel) {
+          local = AppModule_ProvideDatabaseFactory.provideDatabase(ApplicationContextModule_ProvideApplicationFactory.provideApplication(applicationContextModule));
+          database = DoubleCheck.reentrantCheck(database, local);
+        }
+      }
+    }
+    return (Database) local;
+  }
+
+  private ItemDao itemDao() {
+    return AppModule_ProvideItemDaoFactory.provideItemDao(database());
   }
 
   @Override
@@ -155,12 +185,12 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
       @Override
       public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
-        return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(ApplicationContextModule_ProvideApplicationFactory.provideApplication(DaggerApplication_HiltComponents_SingletonC.this.applicationContextModule), Collections.<String>emptySet(), new ViewModelCBuilder());
+        return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(ApplicationContextModule_ProvideApplicationFactory.provideApplication(DaggerApplication_HiltComponents_SingletonC.this.applicationContextModule), getViewModelKeys(), new ViewModelCBuilder());
       }
 
       @Override
       public Set<String> getViewModelKeys() {
-        return Collections.<String>emptySet();
+        return SetBuilder.<String>newSetBuilder(2).add(AddEditFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(MainFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).build();
       }
 
       @Override
@@ -200,11 +230,15 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
         }
 
         @Override
-        public void injectMainFragment(MainFragment mainFragment) {
+        public void injectAddEditFragment(AddEditFragment addEditFragment) {
         }
 
         @Override
-        public void injectAddEditFragment(AddEditFragment addEditFragment) {
+        public void injectInsertErrorDialog(InsertErrorDialog insertErrorDialog) {
+        }
+
+        @Override
+        public void injectMainFragment(MainFragment mainFragment) {
         }
 
         @Override
@@ -280,13 +314,63 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
     }
 
     private final class ViewModelCImpl extends Application_HiltComponents.ViewModelC {
-      private ViewModelCImpl(SavedStateHandle savedStateHandle) {
+      private final SavedStateHandle savedStateHandle;
 
+      private volatile Provider<AddEditFragmentViewModel> addEditFragmentViewModelProvider;
+
+      private volatile Provider<MainFragmentViewModel> mainFragmentViewModelProvider;
+
+      private ViewModelCImpl(SavedStateHandle savedStateHandleParam) {
+        this.savedStateHandle = savedStateHandleParam;
+      }
+
+      private AddEditFragmentViewModel addEditFragmentViewModel() {
+        return new AddEditFragmentViewModel(savedStateHandle, DaggerApplication_HiltComponents_SingletonC.this.itemDao(), ApplicationContextModule_ProvideApplicationFactory.provideApplication(DaggerApplication_HiltComponents_SingletonC.this.applicationContextModule));
+      }
+
+      private Provider<AddEditFragmentViewModel> addEditFragmentViewModelProvider() {
+        Object local = addEditFragmentViewModelProvider;
+        if (local == null) {
+          local = new SwitchingProvider<>(0);
+          addEditFragmentViewModelProvider = (Provider<AddEditFragmentViewModel>) local;
+        }
+        return (Provider<AddEditFragmentViewModel>) local;
+      }
+
+      private Provider<MainFragmentViewModel> mainFragmentViewModelProvider() {
+        Object local = mainFragmentViewModelProvider;
+        if (local == null) {
+          local = new SwitchingProvider<>(1);
+          mainFragmentViewModelProvider = (Provider<MainFragmentViewModel>) local;
+        }
+        return (Provider<MainFragmentViewModel>) local;
       }
 
       @Override
       public Map<String, Provider<ViewModel>> getHiltViewModelMap() {
-        return Collections.<String, Provider<ViewModel>>emptyMap();
+        return MapBuilder.<String, Provider<ViewModel>>newMapBuilder(2).put("com.example.todoapp.ui.addedit.AddEditFragmentViewModel", (Provider) addEditFragmentViewModelProvider()).put("com.example.todoapp.ui.items.MainFragmentViewModel", (Provider) mainFragmentViewModelProvider()).build();
+      }
+
+      private final class SwitchingProvider<T> implements Provider<T> {
+        private final int id;
+
+        SwitchingProvider(int id) {
+          this.id = id;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public T get() {
+          switch (id) {
+            case 0: // com.example.todoapp.ui.addedit.AddEditFragmentViewModel 
+            return (T) ViewModelCImpl.this.addEditFragmentViewModel();
+
+            case 1: // com.example.todoapp.ui.items.MainFragmentViewModel 
+            return (T) new MainFragmentViewModel();
+
+            default: throw new AssertionError(id);
+          }
+        }
       }
     }
   }
