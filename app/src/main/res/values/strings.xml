@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ToDoApp</string>
+    <string name="addedit_clock_image_button_description">Zmień wybraną godzinę</string>
+    <string name="name">Nazwa</string>
+    <string name="category">Kategoria</string>
+    <string name="addeidt_category_selector_action_label">Wybierz kategorię</string>
+    <string name="date">Data</string>
+    <string name="add_new_item">Dodaj nowy element</string>
 </resources>
