@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,13 +19,13 @@ import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentAddeditBinding
 import com.example.todoapp.ui.MainActivity
 import com.example.todoapp.utils.models.Date
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddEditFragment : Fragment(R.layout.fragment_addedit) {
+
     private lateinit var binding: FragmentAddeditBinding
     private val viewModel: AddEditFragmentViewModel by viewModels()
 
@@ -36,14 +37,22 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
         (activity as MainActivity).supportActionBar?.title = args.title
 
         binding.apply {
-            categorySelector.setText(viewModel.categoryString)
-            categorySelector.addTextChangedListener {
-                viewModel.categoryString = it.toString()
-            }
+
+            categorySelector.setText(resources.getString(R.string.work))
+            val categories = arrayOf(
+                resources.getString(R.string.work),
+                resources.getString(R.string.shopping),
+                resources.getString(R.string.other)
+            )
 
             val categoriesAdapter =
-                ArrayAdapter(requireActivity(), R.layout.array_adapter_item, viewModel.categories)
+                ArrayAdapter(requireActivity(), R.layout.array_adapter_item, categories)
             categorySelector.setAdapter(categoriesAdapter)
+
+            categorySelector.setOnItemClickListener { _, _, position, _ ->
+                categorySelector.setAdapter(categoriesAdapter)
+                viewModel.categoryInt = position
+            }
 
             nameEditText.setText(viewModel.nameString)
             nameEditText.addTextChangedListener {
@@ -70,14 +79,15 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
                         findNavController().navigate(navigateToDatePickerDialog)
                     }
                     is AddEditFragmentViewModel.AddEditFragmentEvents.ShowSavedMessage -> {
-                        (activity as MainActivity).onBackPressed()
-                        Snackbar.make(
-                            requireView(), resources.getString(R.string.saved),
-                            Snackbar.LENGTH_LONG
+                        Toast.makeText(
+                            requireContext(),
+                            resources.getString(R.string.saved),
+                            Toast.LENGTH_SHORT
                         ).show()
+                        findNavController().popBackStack()
                     }
                     is AddEditFragmentViewModel.AddEditFragmentEvents.CancelEditing -> {
-                        (activity as MainActivity).onBackPressed()
+                        findNavController().popBackStack()
                     }
                     is AddEditFragmentViewModel.AddEditFragmentEvents.ShowNameError -> {
                         binding.addeditNameEditText.error = resources.getString(R.string.name_error)

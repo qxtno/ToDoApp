@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:padding="10dp">
 
     <CheckBox
@@ -19,8 +20,8 @@
         android:id="@+id/item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/cirvle_view"
-        android:layout_alignBottom="@id/cirvle_view"
+        android:layout_alignTop="@id/circle_view"
+        android:layout_alignBottom="@id/circle_view"
         android:layout_toStartOf="@id/item_category"
         android:layout_toEndOf="@id/completed_check_box"
         android:ellipsize="end"
@@ -39,21 +40,20 @@
         tools:text="Data" />
 
     <View
-        android:id="@+id/cirvle_view"
+        android:id="@+id/circle_view"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/ic_circle" />
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/item_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/cirvle_view"
-        android:layout_alignBottom="@id/cirvle_view"
+        android:layout_alignTop="@id/circle_view"
+        android:layout_alignBottom="@id/circle_view"
         android:layout_marginEnd="4dp"
-        android:layout_toStartOf="@id/cirvle_view"
+        android:layout_toStartOf="@id/circle_view"
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="16sp"

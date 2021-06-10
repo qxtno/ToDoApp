@@ -10,6 +10,9 @@
         <action
             android:id="@+id/action_mainFragment_to_addEditFragment"
             app:destination="@id/addEditFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_deleteAllDialog"
+            app:destination="@id/deleteAllDialog" />
     </fragment>
     <fragment
         android:id="@+id/addEditFragment"
@@ -31,7 +34,7 @@
     </fragment>
     <dialog
         android:id="@+id/datePickerDialog"
-        android:name="com.example.todoapp.ui.addedit.DatePickerDialog">
+        android:name="com.example.todoapp.ui.addedit.dialogs.DatePickerDialog">
         <argument
             android:name="date"
             android:defaultValue="@null"
@@ -40,9 +43,12 @@
     </dialog>
     <dialog
         android:id="@+id/insertErrorDialog"
-        android:name="com.example.todoapp.ui.addedit.InsertErrorDialog">
+        android:name="com.example.todoapp.ui.addedit.dialogs.InsertErrorDialog">
         <argument
             android:name="error"
             app:argType="string" />
     </dialog>
+    <dialog
+        android:id="@+id/deleteAllDialog"
+        android:name="com.example.todoapp.ui.items.deleteall.DeleteAllCompletedDialog" />
 </navigation>

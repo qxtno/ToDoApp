@@ -1,10 +1,8 @@
 package com.example.todoapp.ui.addedit
 
-import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.R
 import com.example.todoapp.database.dao.ItemDao
 import com.example.todoapp.database.model.Item
 import com.example.todoapp.utils.models.Date
@@ -20,13 +18,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditFragmentViewModel @Inject constructor(
     private val state: SavedStateHandle,
-    private val itemDao: ItemDao,
-    application: Application
+    private val itemDao: ItemDao
 ) : ViewModel() {
     private val eventChannel = Channel<AddEditFragmentEvents>()
     val events = eventChannel.receiveAsFlow()
-
-    val categories: Array<String> = application.resources.getStringArray(R.array.categories)
 
     val item = state.get<Item>("item")
 
@@ -37,11 +32,11 @@ class AddEditFragmentViewModel @Inject constructor(
             state.set("nameString", value)
         }
 
-    var categoryString: String =
-        state.get<String>("categoryString") ?: item?.category ?: ""
+    var categoryInt: Int =
+        state.get<Int>("categoryInt") ?: item?.category ?: 0
         set(value) {
             field = value
-            state.set("categoryString", value)
+            state.set("categoryInt", value)
         }
 
     var dateString: String =
@@ -71,7 +66,7 @@ class AddEditFragmentViewModel @Inject constructor(
                         id = null,
                         completed = false,
                         name = nameString,
-                        category = if (categoryString != "") categoryString else categories[categories.size - 1],
+                        category = categoryInt,
                         date = dateString
                     )
                 )

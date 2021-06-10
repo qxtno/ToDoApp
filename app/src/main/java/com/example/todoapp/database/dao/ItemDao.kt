@@ -12,9 +12,9 @@ interface ItemDao {
     @Update
     suspend fun updateItem(item: Item)
 
-    @Query("SELECT * FROM item")
+    @Query("SELECT * FROM item ORDER BY completed ASC, date ASC")
     fun getAllItems(): Flow<List<Item>>
 
-    @Delete
-    suspend fun deleteItem(item: Item)
+    @Query("DELETE FROM Item WHERE completed = 1")
+    suspend fun deleteCompletedItems()
 }

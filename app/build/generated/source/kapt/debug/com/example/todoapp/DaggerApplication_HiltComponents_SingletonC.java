@@ -16,10 +16,13 @@ import com.example.todoapp.ui.MainActivity;
 import com.example.todoapp.ui.addedit.AddEditFragment;
 import com.example.todoapp.ui.addedit.AddEditFragmentViewModel;
 import com.example.todoapp.ui.addedit.AddEditFragmentViewModel_HiltModules_KeyModule_ProvideFactory;
-import com.example.todoapp.ui.addedit.InsertErrorDialog;
+import com.example.todoapp.ui.addedit.dialogs.InsertErrorDialog;
 import com.example.todoapp.ui.items.MainFragment;
 import com.example.todoapp.ui.items.MainFragmentViewModel;
 import com.example.todoapp.ui.items.MainFragmentViewModel_HiltModules_KeyModule_ProvideFactory;
+import com.example.todoapp.ui.items.deleteall.DeleteAllCompletedDialog;
+import com.example.todoapp.ui.items.deleteall.DeleteAllCompletedViewModel;
+import com.example.todoapp.ui.items.deleteall.DeleteAllViewModel_HiltModules_KeyModule_ProvideFactory;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
 import dagger.hilt.android.internal.builders.ActivityRetainedComponentBuilder;
@@ -190,7 +193,7 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
       @Override
       public Set<String> getViewModelKeys() {
-        return SetBuilder.<String>newSetBuilder(2).add(AddEditFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(MainFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).build();
+        return SetBuilder.<String>newSetBuilder(3).add(AddEditFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(DeleteAllViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(MainFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).build();
       }
 
       @Override
@@ -239,6 +242,10 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
         @Override
         public void injectMainFragment(MainFragment mainFragment) {
+        }
+
+        @Override
+        public void injectDeleteAllDialog(DeleteAllCompletedDialog deleteAllCompletedDialog) {
         }
 
         @Override
@@ -318,6 +325,8 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
       private volatile Provider<AddEditFragmentViewModel> addEditFragmentViewModelProvider;
 
+      private volatile Provider<DeleteAllCompletedViewModel> deleteAllViewModelProvider;
+
       private volatile Provider<MainFragmentViewModel> mainFragmentViewModelProvider;
 
       private ViewModelCImpl(SavedStateHandle savedStateHandleParam) {
@@ -325,7 +334,7 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
       }
 
       private AddEditFragmentViewModel addEditFragmentViewModel() {
-        return new AddEditFragmentViewModel(savedStateHandle, DaggerApplication_HiltComponents_SingletonC.this.itemDao(), ApplicationContextModule_ProvideApplicationFactory.provideApplication(DaggerApplication_HiltComponents_SingletonC.this.applicationContextModule));
+        return new AddEditFragmentViewModel(savedStateHandle, DaggerApplication_HiltComponents_SingletonC.this.itemDao());
       }
 
       private Provider<AddEditFragmentViewModel> addEditFragmentViewModelProvider() {
@@ -337,10 +346,27 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
         return (Provider<AddEditFragmentViewModel>) local;
       }
 
+      private DeleteAllCompletedViewModel deleteAllViewModel() {
+        return new DeleteAllCompletedViewModel(DaggerApplication_HiltComponents_SingletonC.this.itemDao());
+      }
+
+      private Provider<DeleteAllCompletedViewModel> deleteAllViewModelProvider() {
+        Object local = deleteAllViewModelProvider;
+        if (local == null) {
+          local = new SwitchingProvider<>(1);
+          deleteAllViewModelProvider = (Provider<DeleteAllCompletedViewModel>) local;
+        }
+        return (Provider<DeleteAllCompletedViewModel>) local;
+      }
+
+      private MainFragmentViewModel mainFragmentViewModel() {
+        return new MainFragmentViewModel(DaggerApplication_HiltComponents_SingletonC.this.itemDao());
+      }
+
       private Provider<MainFragmentViewModel> mainFragmentViewModelProvider() {
         Object local = mainFragmentViewModelProvider;
         if (local == null) {
-          local = new SwitchingProvider<>(1);
+          local = new SwitchingProvider<>(2);
           mainFragmentViewModelProvider = (Provider<MainFragmentViewModel>) local;
         }
         return (Provider<MainFragmentViewModel>) local;
@@ -348,7 +374,7 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
       @Override
       public Map<String, Provider<ViewModel>> getHiltViewModelMap() {
-        return MapBuilder.<String, Provider<ViewModel>>newMapBuilder(2).put("com.example.todoapp.ui.addedit.AddEditFragmentViewModel", (Provider) addEditFragmentViewModelProvider()).put("com.example.todoapp.ui.items.MainFragmentViewModel", (Provider) mainFragmentViewModelProvider()).build();
+        return MapBuilder.<String, Provider<ViewModel>>newMapBuilder(3).put("com.example.todoapp.ui.addedit.AddEditFragmentViewModel", (Provider) addEditFragmentViewModelProvider()).put("com.example.todoapp.ui.items.deleteall.DeleteAllViewModel", (Provider) deleteAllViewModelProvider()).put("com.example.todoapp.ui.items.MainFragmentViewModel", (Provider) mainFragmentViewModelProvider()).build();
       }
 
       private final class SwitchingProvider<T> implements Provider<T> {
@@ -365,8 +391,11 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
             case 0: // com.example.todoapp.ui.addedit.AddEditFragmentViewModel 
             return (T) ViewModelCImpl.this.addEditFragmentViewModel();
 
-            case 1: // com.example.todoapp.ui.items.MainFragmentViewModel 
-            return (T) new MainFragmentViewModel();
+            case 1: // com.example.todoapp.ui.items.deleteall.DeleteAllViewModel 
+            return (T) ViewModelCImpl.this.deleteAllViewModel();
+
+            case 2: // com.example.todoapp.ui.items.MainFragmentViewModel 
+            return (T) ViewModelCImpl.this.mainFragmentViewModel();
 
             default: throw new AssertionError(id);
           }

@@ -1,4 +1,4 @@
-package com.example.todoapp.ui.addedit
+package com.example.todoapp.ui.addedit.dialogs
 
 import android.app.DatePickerDialog
 import android.app.Dialog

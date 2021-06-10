@@ -1,9 +1,8 @@
 <resources>
-    <string-array name="categories">
-        <item>Praca</item>
-        <item>Zakupy</item>
-        <item>Inne</item>
-    </string-array>
+    <string name="work">Praca</string>
+    <string name="shopping">Zakupy</string>
+    <string name="other">Inne</string>
+
     <string name="app_name">ToDoApp</string>
     <string name="addedit_clock_image_button_description">Zmień wybraną godzinę</string>
     <string name="name">Nazwa</string>
@@ -19,4 +18,9 @@
     <string name="name_error">Nazwa nie może być pusta</string>
     <string name="save_error">Wystąpił błąd przy zapisywaniu</string>
     <string name="try_again">Spróbuj ponownie</string>
+    <string name="delete_completed">Usuń zaznaczone</string>
+    <string name="delete_completed_message">Czy na pewno chcesz usunąć wszystkie zaznaczone elementy?</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="empty">Pusto, wszystko zrobione!</string>
 </resources>
