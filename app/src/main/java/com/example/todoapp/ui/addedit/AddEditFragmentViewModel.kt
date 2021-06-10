@@ -63,13 +63,14 @@ class AddEditFragmentViewModel @Inject constructor(
             if (isNameCorrect()) {
                 itemDao.insertItem(
                     Item(
-                        id = null,
-                        completed = false,
+                        id = item?.id,
+                        completed = item?.completed ?: false,
                         name = nameString,
                         category = categoryInt,
                         date = dateString
                     )
                 )
+
                 eventChannel.send(
                     AddEditFragmentEvents.ShowSavedMessage
                 )

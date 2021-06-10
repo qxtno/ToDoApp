@@ -22,7 +22,7 @@ import com.example.todoapp.ui.items.MainFragmentViewModel;
 import com.example.todoapp.ui.items.MainFragmentViewModel_HiltModules_KeyModule_ProvideFactory;
 import com.example.todoapp.ui.items.deleteall.DeleteAllCompletedDialog;
 import com.example.todoapp.ui.items.deleteall.DeleteAllCompletedViewModel;
-import com.example.todoapp.ui.items.deleteall.DeleteAllViewModel_HiltModules_KeyModule_ProvideFactory;
+import com.example.todoapp.ui.items.deleteall.DeleteAllCompletedViewModel_HiltModules_KeyModule_ProvideFactory;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
 import dagger.hilt.android.internal.builders.ActivityRetainedComponentBuilder;
@@ -193,7 +193,7 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
       @Override
       public Set<String> getViewModelKeys() {
-        return SetBuilder.<String>newSetBuilder(3).add(AddEditFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(DeleteAllViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(MainFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).build();
+        return SetBuilder.<String>newSetBuilder(3).add(AddEditFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(DeleteAllCompletedViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(MainFragmentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).build();
       }
 
       @Override
@@ -245,7 +245,8 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
         }
 
         @Override
-        public void injectDeleteAllDialog(DeleteAllCompletedDialog deleteAllCompletedDialog) {
+        public void injectDeleteAllCompletedDialog(
+            DeleteAllCompletedDialog deleteAllCompletedDialog) {
         }
 
         @Override
@@ -325,7 +326,7 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
       private volatile Provider<AddEditFragmentViewModel> addEditFragmentViewModelProvider;
 
-      private volatile Provider<DeleteAllCompletedViewModel> deleteAllViewModelProvider;
+      private volatile Provider<DeleteAllCompletedViewModel> deleteAllCompletedViewModelProvider;
 
       private volatile Provider<MainFragmentViewModel> mainFragmentViewModelProvider;
 
@@ -346,15 +347,15 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
         return (Provider<AddEditFragmentViewModel>) local;
       }
 
-      private DeleteAllCompletedViewModel deleteAllViewModel() {
+      private DeleteAllCompletedViewModel deleteAllCompletedViewModel() {
         return new DeleteAllCompletedViewModel(DaggerApplication_HiltComponents_SingletonC.this.itemDao());
       }
 
-      private Provider<DeleteAllCompletedViewModel> deleteAllViewModelProvider() {
-        Object local = deleteAllViewModelProvider;
+      private Provider<DeleteAllCompletedViewModel> deleteAllCompletedViewModelProvider() {
+        Object local = deleteAllCompletedViewModelProvider;
         if (local == null) {
           local = new SwitchingProvider<>(1);
-          deleteAllViewModelProvider = (Provider<DeleteAllCompletedViewModel>) local;
+          deleteAllCompletedViewModelProvider = (Provider<DeleteAllCompletedViewModel>) local;
         }
         return (Provider<DeleteAllCompletedViewModel>) local;
       }
@@ -374,7 +375,7 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
 
       @Override
       public Map<String, Provider<ViewModel>> getHiltViewModelMap() {
-        return MapBuilder.<String, Provider<ViewModel>>newMapBuilder(3).put("com.example.todoapp.ui.addedit.AddEditFragmentViewModel", (Provider) addEditFragmentViewModelProvider()).put("com.example.todoapp.ui.items.deleteall.DeleteAllViewModel", (Provider) deleteAllViewModelProvider()).put("com.example.todoapp.ui.items.MainFragmentViewModel", (Provider) mainFragmentViewModelProvider()).build();
+        return MapBuilder.<String, Provider<ViewModel>>newMapBuilder(3).put("com.example.todoapp.ui.addedit.AddEditFragmentViewModel", (Provider) addEditFragmentViewModelProvider()).put("com.example.todoapp.ui.items.deleteall.DeleteAllCompletedViewModel", (Provider) deleteAllCompletedViewModelProvider()).put("com.example.todoapp.ui.items.MainFragmentViewModel", (Provider) mainFragmentViewModelProvider()).build();
       }
 
       private final class SwitchingProvider<T> implements Provider<T> {
@@ -391,8 +392,8 @@ public final class DaggerApplication_HiltComponents_SingletonC extends Applicati
             case 0: // com.example.todoapp.ui.addedit.AddEditFragmentViewModel 
             return (T) ViewModelCImpl.this.addEditFragmentViewModel();
 
-            case 1: // com.example.todoapp.ui.items.deleteall.DeleteAllViewModel 
-            return (T) ViewModelCImpl.this.deleteAllViewModel();
+            case 1: // com.example.todoapp.ui.items.deleteall.DeleteAllCompletedViewModel 
+            return (T) ViewModelCImpl.this.deleteAllCompletedViewModel();
 
             case 2: // com.example.todoapp.ui.items.MainFragmentViewModel 
             return (T) ViewModelCImpl.this.mainFragmentViewModel();

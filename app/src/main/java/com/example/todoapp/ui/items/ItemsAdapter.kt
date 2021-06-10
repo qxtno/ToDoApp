@@ -17,7 +17,6 @@ import com.example.todoapp.utils.CategoryConstants
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class ItemAdapter(private val listener: OnItemClickListener) :
     ListAdapter<Item, ItemAdapter.ItemViewHolder>(DiffCallback()) {
 
@@ -71,7 +70,7 @@ class ItemAdapter(private val listener: OnItemClickListener) :
                 itemName.text = item.name
                 itemCategory.text = category.second
                 itemDate.text = item.date
-                cirvleView.background = circle
+                circleView.background = circle
             }
         }
     }

@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentAddeditBinding
 import com.example.todoapp.ui.MainActivity
+import com.example.todoapp.utils.CategoryConstants
 import com.example.todoapp.utils.models.Date
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -25,9 +27,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddEditFragment : Fragment(R.layout.fragment_addedit) {
-
     private lateinit var binding: FragmentAddeditBinding
     private val viewModel: AddEditFragmentViewModel by viewModels()
+    private lateinit var categoryAutoCompleteTextView: AutoCompleteTextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,8 +39,9 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
         (activity as MainActivity).supportActionBar?.title = args.title
 
         binding.apply {
+            categoryAutoCompleteTextView = categorySelector
 
-            categorySelector.setText(resources.getString(R.string.work))
+            setCategoryValue(args)
             val categories = arrayOf(
                 resources.getString(R.string.work),
                 resources.getString(R.string.shopping),
@@ -138,6 +141,20 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
                 navBackStackEntry.lifecycle.removeObserver(observer)
             }
         })
+    }
+
+    private fun setCategoryValue(args: AddEditFragmentArgs) {
+        when (args.item?.category ?: 0) {
+            CategoryConstants.work -> {
+                categoryAutoCompleteTextView.setText(resources.getString(R.string.work))
+            }
+            CategoryConstants.shopping -> {
+                categoryAutoCompleteTextView.setText(resources.getString(R.string.shopping))
+            }
+            else -> {
+                categoryAutoCompleteTextView.setText(resources.getString(R.string.other))
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

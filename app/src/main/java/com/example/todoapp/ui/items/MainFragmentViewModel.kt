@@ -37,9 +37,23 @@ class MainFragmentViewModel @Inject constructor(
     }
 
     fun onDeleteAllClick() = viewModelScope.launch {
-        eventChannel.send(
-            MainFragmentEvents.NavigateToDeleteAllDialog
-        )
+        var areItemsSelected = false
+
+        items.value?.forEach {
+            if (it.completed) {
+                areItemsSelected = true
+            }
+        }
+
+        if (items.value?.isNotEmpty() == true && areItemsSelected) {
+            eventChannel.send(
+                MainFragmentEvents.NavigateToDeleteAllDialog
+            )
+        } else {
+            eventChannel.send(
+                MainFragmentEvents.ShowCannotDeleteMessage
+            )
+        }
     }
 
     sealed class MainFragmentEvents {
@@ -47,5 +61,6 @@ class MainFragmentViewModel @Inject constructor(
             MainFragmentEvents()
 
         object NavigateToDeleteAllDialog : MainFragmentEvents()
+        object ShowCannotDeleteMessage : MainFragmentEvents()
     }
 }

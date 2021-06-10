@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -65,6 +66,13 @@ class MainFragment : Fragment(R.layout.fragment_main), ItemAdapter.OnItemClickLi
                         val navigateToDeleteAllDialog =
                             MainFragmentDirections.actionMainFragmentToDeleteAllDialog()
                         findNavController().navigate(navigateToDeleteAllDialog)
+                    }
+                    is MainFragmentViewModel.MainFragmentEvents.ShowCannotDeleteMessage -> {
+                        Toast.makeText(
+                            requireContext(),
+                            resources.getString(R.string.cannot_delete_message),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
