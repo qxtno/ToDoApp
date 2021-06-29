@@ -26,22 +26,13 @@
         <action
             android:id="@+id/action_addEditFragment_to_datePickerDialog"
             app:destination="@id/datePickerDialog" />
-        <argument
-            android:name="title"
-            app:argType="string" />
         <action
             android:id="@+id/action_addEditFragment_to_insertErrorDialog"
             app:destination="@id/insertErrorDialog" />
     </fragment>
     <dialog
         android:id="@+id/datePickerDialog"
-        android:name="com.example.todoapp.ui.addedit.dialogs.DatePickerDialog">
-        <argument
-            android:name="date"
-            android:defaultValue="@null"
-            app:argType="com.example.todoapp.utils.models.Date"
-            app:nullable="true" />
-    </dialog>
+        android:name="com.example.todoapp.ui.addedit.dialogs.DatePickerDialog" />
     <dialog
         android:id="@+id/insertErrorDialog"
         android:name="com.example.todoapp.ui.addedit.dialogs.InsertErrorDialog">

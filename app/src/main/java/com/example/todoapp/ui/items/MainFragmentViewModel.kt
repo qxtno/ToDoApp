@@ -22,13 +22,13 @@ class MainFragmentViewModel @Inject constructor(
 
     fun addItemClick() = viewModelScope.launch {
         eventChannel.send(
-            MainFragmentEvents.NavigateToAddEditScreen(null, true)
+            MainFragmentEvents.NavigateToAddEditScreen(null)
         )
     }
 
     fun onItemClick(item: Item) = viewModelScope.launch {
         eventChannel.send(
-            MainFragmentEvents.NavigateToAddEditScreen(item, false)
+            MainFragmentEvents.NavigateToAddEditScreen(item)
         )
     }
 
@@ -57,7 +57,7 @@ class MainFragmentViewModel @Inject constructor(
     }
 
     sealed class MainFragmentEvents {
-        data class NavigateToAddEditScreen(val item: Item?, val newItem: Boolean) :
+        data class NavigateToAddEditScreen(val item: Item?) :
             MainFragmentEvents()
 
         object NavigateToDeleteAllDialog : MainFragmentEvents()

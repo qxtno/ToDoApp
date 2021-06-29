@@ -47,8 +47,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeActionLabel="@string/addeidt_category_selector_action_label"
-                    android:imeOptions="flagNoExtractUi"
-                    android:inputType="none"
                     tools:ignore="LabelFor" />
 
             </com.google.android.material.textfield.TextInputLayout>

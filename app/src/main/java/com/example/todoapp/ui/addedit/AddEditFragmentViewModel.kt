@@ -5,14 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.database.dao.ItemDao
 import com.example.todoapp.database.model.Item
-import com.example.todoapp.utils.models.Date
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.sql.SQLException
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,22 +36,16 @@ class AddEditFragmentViewModel @Inject constructor(
             state.set("categoryInt", value)
         }
 
-    var dateString: String =
-        state.get<String>("dateString") ?: item?.date ?: getDate()
+    var dateLong: Long =
+        state.get<Long>("dateLong") ?: item?.date ?: System.currentTimeMillis()
         set(value) {
             field = value
-            state.set("dateString", value)
+            state.set("dateLong", value)
         }
 
-    private fun getDate() = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date())
-
     fun onDateSelectorClick() = viewModelScope.launch {
-        val date = getDate()
-        val day = date.substring(0, 2).toInt()
-        val month = date.substring(3, 5).toInt()
-        val year = date.substring(6, 10).toInt()
         eventChannel.send(
-            AddEditFragmentEvents.NavigateToDatePickerDialog(Date(day, month, year))
+            AddEditFragmentEvents.NavigateToDatePickerDialog
         )
     }
 
@@ -67,7 +58,7 @@ class AddEditFragmentViewModel @Inject constructor(
                         completed = item?.completed ?: false,
                         name = nameString,
                         category = categoryInt,
-                        date = dateString
+                        date = dateLong
                     )
                 )
 
@@ -98,16 +89,9 @@ class AddEditFragmentViewModel @Inject constructor(
         )
     }
 
-    fun onCancelClick() = viewModelScope.launch {
-        eventChannel.send(
-            AddEditFragmentEvents.CancelEditing
-        )
-    }
-
     sealed class AddEditFragmentEvents {
-        data class NavigateToDatePickerDialog(val date: Date) : AddEditFragmentEvents()
+        object NavigateToDatePickerDialog : AddEditFragmentEvents()
         object ShowSavedMessage : AddEditFragmentEvents()
-        object CancelEditing : AddEditFragmentEvents()
         data class ShowNameError(val correctValue: Boolean) : AddEditFragmentEvents()
         data class ShowInsertError(val message: String) : AddEditFragmentEvents()
     }

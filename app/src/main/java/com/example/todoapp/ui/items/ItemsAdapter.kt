@@ -14,8 +14,7 @@ import com.example.todoapp.R
 import com.example.todoapp.database.model.Item
 import com.example.todoapp.databinding.RecylerViewItemBinding
 import com.example.todoapp.utils.CategoryConstants
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.todoapp.utils.DateUtils
 
 class ItemAdapter(private val listener: OnItemClickListener) :
     ListAdapter<Item, ItemAdapter.ItemViewHolder>(DiffCallback()) {
@@ -63,13 +62,13 @@ class ItemAdapter(private val listener: OnItemClickListener) :
                             PorterDuff.Mode.MULTIPLY
                         )
                 }
-                if (isDateInPast(item.date)) {
+                if (DateUtils().isDateInPast(item.date)) {
                     itemDate.setTextColor(Color.RED)
                 }
                 completedCheckBox.isChecked = item.completed
                 itemName.text = item.name
                 itemCategory.text = category.second
-                itemDate.text = item.date
+                itemDate.text = DateUtils().formatDateToString(item.date)
                 circleView.background = circle
             }
         }
@@ -107,18 +106,5 @@ class ItemAdapter(private val listener: OnItemClickListener) :
                 Pair("#455A64", context.resources.getString(R.string.other))
             }
         }
-    }
-
-    private fun isDateInPast(dateString: String): Boolean {
-        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-        val date: Date? = sdf.parse(dateString)
-        val dateInMillis = date?.time
-        val calendar: Calendar = Calendar.getInstance()
-        val currentDateInMillis = calendar.timeInMillis
-
-        if (dateInMillis != null) {
-            return dateInMillis < currentDateInMillis
-        }
-        return false
     }
 }

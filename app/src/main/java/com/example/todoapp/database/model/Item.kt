@@ -13,5 +13,5 @@ data class Item(
     val completed: Boolean,
     val name: String,
     val category: Int,
-    val date: String
+    val date: Long
 ) : Parcelable

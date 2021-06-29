@@ -20,7 +20,7 @@ import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentAddeditBinding
 import com.example.todoapp.ui.MainActivity
 import com.example.todoapp.utils.CategoryConstants
-import com.example.todoapp.utils.models.Date
+import com.example.todoapp.utils.DateUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -36,7 +36,9 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
         binding = FragmentAddeditBinding.bind(view)
         setHasOptionsMenu(true)
         val args: AddEditFragmentArgs by navArgs()
-        (activity as MainActivity).supportActionBar?.title = args.title
+        val utils = DateUtils()
+
+        setTitle(args)
 
         binding.apply {
             categoryAutoCompleteTextView = categorySelector
@@ -63,9 +65,10 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
                 viewModel.isNameCorrect()
             }
 
-            dateSelectorEditText.setText(viewModel.dateString)
+
+            dateSelectorEditText.setText(utils.formatDateToString(viewModel.dateLong))
             dateSelectorEditText.addTextChangedListener {
-                viewModel.dateString = it.toString()
+                viewModel.dateLong = utils.formatDateToLong(it.toString())
             }
 
             dateSelectorEditText.setOnClickListener {
@@ -78,30 +81,25 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
                 when (it) {
                     is AddEditFragmentViewModel.AddEditFragmentEvents.NavigateToDatePickerDialog -> {
                         val navigateToDatePickerDialog =
-                            AddEditFragmentDirections.actionAddEditFragmentToDatePickerDialog(it.date)
+                            AddEditFragmentDirections.actionAddEditFragmentToDatePickerDialog()
                         findNavController().navigate(navigateToDatePickerDialog)
                     }
-                    is AddEditFragmentViewModel.AddEditFragmentEvents.ShowSavedMessage -> {
+                    is AddEditFragmentViewModel.AddEditFragmentEvents.ShowInsertError -> {
+                        val navigateToInsertErrorDialog =
+                            AddEditFragmentDirections.actionAddEditFragmentToInsertErrorDialog(it.message)
+                        findNavController().navigate(navigateToInsertErrorDialog)
+                    }
+                    is AddEditFragmentViewModel.AddEditFragmentEvents.ShowNameError -> {
+                        binding.addeditNameEditText.error = resources.getString(R.string.name_error)
+                        binding.addeditNameEditText.isErrorEnabled = it.correctValue
+                    }
+                    AddEditFragmentViewModel.AddEditFragmentEvents.ShowSavedMessage -> {
                         Toast.makeText(
                             requireContext(),
                             resources.getString(R.string.saved),
                             Toast.LENGTH_SHORT
                         ).show()
                         findNavController().popBackStack()
-                    }
-                    is AddEditFragmentViewModel.AddEditFragmentEvents.CancelEditing -> {
-                        findNavController().popBackStack()
-                    }
-                    is AddEditFragmentViewModel.AddEditFragmentEvents.ShowNameError -> {
-                        binding.addeditNameEditText.error = resources.getString(R.string.name_error)
-                        if (!it.correctValue) {
-                            binding.addeditNameEditText.isErrorEnabled = false
-                        }
-                    }
-                    is AddEditFragmentViewModel.AddEditFragmentEvents.ShowInsertError -> {
-                        val navigateToInsertErrorDialog =
-                            AddEditFragmentDirections.actionAddEditFragmentToInsertErrorDialog(it.message)
-                        findNavController().navigate(navigateToInsertErrorDialog)
                     }
                 }
             }
@@ -118,11 +116,9 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
             if (event == Lifecycle.Event.ON_RESUME
                 && navBackStackEntry.savedStateHandle.contains("date")
             ) {
-                val result = navBackStackEntry.savedStateHandle.get<Date>("date")
+                val result = navBackStackEntry.savedStateHandle.get<String>("date")
                 if (result != null) {
-                    val date =
-                        String.format("%02d.%02d.%04d", result.day, result.month, result.year)
-                    binding.dateSelectorEditText.setText(date)
+                    binding.dateSelectorEditText.setText(result)
                 }
             }
             if (event == Lifecycle.Event.ON_RESUME
@@ -169,12 +165,14 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
                     viewModel.onSaveClick()
                 }
             }
-            R.id.action_cancel -> {
-                lifecycleScope.launch {
-                    viewModel.onCancelClick()
-                }
-            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setTitle(args: AddEditFragmentArgs) {
+        (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.add)
+        if (args.item != null) {
+            (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.edit)
+        }
     }
 }

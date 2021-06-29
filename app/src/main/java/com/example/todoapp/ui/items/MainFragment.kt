@@ -51,14 +51,9 @@ class MainFragment : Fragment(R.layout.fragment_main), ItemAdapter.OnItemClickLi
             viewModel.events.collect {
                 when (it) {
                     is MainFragmentViewModel.MainFragmentEvents.NavigateToAddEditScreen -> {
-                        var title = resources.getString(R.string.edit)
-                        if (it.newItem) {
-                            title = resources.getString(R.string.add)
-                        }
                         val navigateToAddEditScreenAction =
                             MainFragmentDirections.actionMainFragmentToAddEditFragment(
-                                it.item,
-                                title
+                                it.item
                             )
                         findNavController().navigate(navigateToAddEditScreenAction)
                     }
