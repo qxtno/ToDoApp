@@ -6,7 +6,8 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.todoapp.ui.items.MainFragment">
+        android:name="com.example.todoapp.ui.items.MainFragment"
+        android:label="@string/tasks">
         <action
             android:id="@+id/action_mainFragment_to_addEditFragment"
             app:destination="@id/addEditFragment" />

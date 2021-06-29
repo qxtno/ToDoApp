@@ -27,7 +27,7 @@
         android:ellipsize="end"
         android:gravity="center|start"
         android:maxLines="1"
-        android:textColor="@color/black"
+        android:textColor="@color/font_color"
         android:textSize="20sp"
         tools:text="Nazwa" />
 
@@ -55,7 +55,7 @@
         android:layout_marginEnd="4dp"
         android:layout_toStartOf="@id/circle_view"
         android:gravity="center"
-        android:textColor="@color/black"
+        android:textColor="@color/font_color"
         android:textSize="16sp"
         tools:text="Kategoria" />
 

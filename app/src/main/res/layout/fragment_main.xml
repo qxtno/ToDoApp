@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/empty"
-        android:textColor="@color/black"
+        android:textColor="@color/font_color"
         android:textSize="20sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
