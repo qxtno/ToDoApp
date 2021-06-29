@@ -22,25 +22,25 @@ class AddEditFragmentViewModel @Inject constructor(
 
     val item = state.get<Item>("item")
 
-    var nameString: String =
-        state.get<String>("nameString") ?: item?.name ?: ""
+    var name: String =
+        state.get<String>("name") ?: item?.name ?: ""
         set(value) {
             field = value
-            state.set("nameString", value)
+            state.set("name", value)
         }
 
-    var categoryInt: Int =
-        state.get<Int>("categoryInt") ?: item?.category ?: 0
+    var category: Int =
+        state.get<Int>("category") ?: item?.category ?: 0
         set(value) {
             field = value
-            state.set("categoryInt", value)
+            state.set("category", value)
         }
 
-    var dateLong: Long =
-        state.get<Long>("dateLong") ?: item?.date ?: System.currentTimeMillis()
+    var date: Long =
+        state.get<Long>("date") ?: item?.date ?: System.currentTimeMillis()
         set(value) {
             field = value
-            state.set("dateLong", value)
+            state.set("date", value)
         }
 
     fun onDateSelectorClick() = viewModelScope.launch {
@@ -56,9 +56,9 @@ class AddEditFragmentViewModel @Inject constructor(
                     Item(
                         id = item?.id,
                         completed = item?.completed ?: false,
-                        name = nameString,
-                        category = categoryInt,
-                        date = dateLong
+                        name = name,
+                        category = category,
+                        date = date
                     )
                 )
 
@@ -74,7 +74,7 @@ class AddEditFragmentViewModel @Inject constructor(
     }
 
     fun isNameCorrect(): Boolean {
-        return if (nameString != "") {
+        return if (name != "") {
             setNameError(false)
             true
         } else {

@@ -56,19 +56,19 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
 
             categorySelector.setOnItemClickListener { _, _, position, _ ->
                 categorySelector.setAdapter(categoriesAdapter)
-                viewModel.categoryInt = position
+                viewModel.category = position
             }
 
-            nameEditText.setText(viewModel.nameString)
+            nameEditText.setText(viewModel.name)
             nameEditText.addTextChangedListener {
-                viewModel.nameString = it.toString()
+                viewModel.name = it.toString()
                 viewModel.isNameCorrect()
             }
 
 
-            dateSelectorEditText.setText(utils.formatDateToString(viewModel.dateLong))
+            dateSelectorEditText.setText(utils.formatDateToString(viewModel.date))
             dateSelectorEditText.addTextChangedListener {
-                viewModel.dateLong = utils.formatDateToLong(it.toString())
+                viewModel.date = utils.formatDateToLong(it.toString())
             }
 
             dateSelectorEditText.setOnClickListener {
