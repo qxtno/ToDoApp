@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,6 +20,7 @@ import com.example.todoapp.databinding.FragmentAddeditBinding
 import com.example.todoapp.ui.MainActivity
 import com.example.todoapp.utils.CategoryConstants
 import com.example.todoapp.utils.DateUtils
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -94,11 +94,12 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
                         binding.addeditNameEditText.isErrorEnabled = it.correctValue
                     }
                     AddEditFragmentViewModel.AddEditFragmentEvents.ShowSavedMessage -> {
-                        Toast.makeText(
-                            requireContext(),
+                        Snackbar.make(
+                            requireView(),
                             resources.getString(R.string.saved),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .show()
                         findNavController().popBackStack()
                     }
                 }

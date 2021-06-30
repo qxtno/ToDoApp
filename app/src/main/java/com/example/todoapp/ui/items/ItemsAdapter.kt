@@ -21,7 +21,7 @@ class ItemAdapter(private val listener: OnItemClickListener) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val binding =
-            RecylerViewItemBinding.inflate(LayoutInflater.from(parent.context))
+            RecylerViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemViewHolder(binding)
     }
 
