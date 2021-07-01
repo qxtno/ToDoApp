@@ -102,6 +102,9 @@ class ItemAdapter(private val listener: OnItemClickListener) :
             CategoryConstants.shopping -> {
                 Pair("#AFB42B", context.resources.getString(R.string.shopping))
             }
+            CategoryConstants.school -> {
+                Pair("#C2185B", context.resources.getString(R.string.school))
+            }
             else -> {
                 Pair("#455A64", context.resources.getString(R.string.other))
             }

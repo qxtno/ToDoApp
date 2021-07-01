@@ -1,9 +1,6 @@
 package com.example.todoapp.ui.addedit
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -20,10 +17,10 @@ import com.example.todoapp.databinding.FragmentAddeditBinding
 import com.example.todoapp.ui.MainActivity
 import com.example.todoapp.utils.CategoryConstants
 import com.example.todoapp.utils.DateUtils
+import com.example.todoapp.utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddEditFragment : Fragment(R.layout.fragment_addedit) {
@@ -45,9 +42,11 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
 
             setCategoryValue(args)
             val categories = arrayOf(
+                resources.getString(R.string.other),
                 resources.getString(R.string.work),
                 resources.getString(R.string.shopping),
-                resources.getString(R.string.other)
+                resources.getString(R.string.school)
+
             )
 
             val categoriesAdapter =
@@ -72,7 +71,12 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
             }
 
             dateSelectorEditText.setOnClickListener {
+                Utils().hideKeyboard(requireView(), activity as MainActivity)
                 viewModel.onDateSelectorClick()
+            }
+
+            fabSave.setOnClickListener {
+                viewModel.onSaveClick()
             }
         }
 
@@ -98,7 +102,7 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
                             requireView(),
                             resources.getString(R.string.saved),
                             Snackbar.LENGTH_SHORT
-                        )
+                        ).setAnchorView(binding.fabSave)
                             .show()
                         findNavController().popBackStack()
                     }
@@ -148,26 +152,13 @@ class AddEditFragment : Fragment(R.layout.fragment_addedit) {
             CategoryConstants.shopping -> {
                 categoryAutoCompleteTextView.setText(resources.getString(R.string.shopping))
             }
+            CategoryConstants.school -> {
+                categoryAutoCompleteTextView.setText(resources.getString(R.string.school))
+            }
             else -> {
                 categoryAutoCompleteTextView.setText(resources.getString(R.string.other))
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.add_edit_menu, menu)
-        return super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_save -> {
-                lifecycleScope.launch {
-                    viewModel.onSaveClick()
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun setTitle(args: AddEditFragmentArgs) {
