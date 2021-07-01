@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_mainFragment_to_deleteAllDialog"
             app:destination="@id/deleteAllDialog" />
+        <action
+            android:id="@+id/action_mainFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEditFragment"
@@ -43,4 +46,8 @@
     <dialog
         android:id="@+id/deleteAllDialog"
         android:name="com.example.todoapp.ui.items.deleteall.DeleteAllCompletedDialog" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.todoapp.ui.settings.SettingsFragment"
+        android:label="@string/settings" />
 </navigation>

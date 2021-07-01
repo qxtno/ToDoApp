@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/popup_auto"
+        android:title="@string/auto" />
+    <item
+        android:id="@+id/popup_dark"
+        android:title="@string/dark" />
+    <item
+        android:id="@+id/popup_light"
+        android:title="@string/light" />
+</menu>

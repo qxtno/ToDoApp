@@ -27,4 +27,9 @@
     <string name="cannot_delete_message">Nie ma co usunąć!</string>
     <string name="tasks">Zadania</string>
     <string name="save_new_item">Zapisz nowy element</string>
+    <string name="app_theme">Motyw</string>
+    <string name="auto">Motyw systemowy</string>
+    <string name="dark">Motyw ciemny</string>
+    <string name="light">Motyw jasny</string>
+    <string name="settings">Ustawienia</string>
 </resources>

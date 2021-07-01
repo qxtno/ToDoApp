@@ -94,6 +94,11 @@ class MainFragment : Fragment(R.layout.fragment_main), ItemAdapter.OnItemClickLi
                     viewModel.onDeleteAllClick()
                 }
             }
+            R.id.action_navigate_to_settings -> {
+                val navigateToSettingsScreen =
+                    MainFragmentDirections.actionMainFragmentToSettingsFragment()
+                findNavController().navigate(navigateToSettingsScreen)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
