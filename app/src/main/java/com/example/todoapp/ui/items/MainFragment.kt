@@ -5,15 +5,17 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.database.model.Item
 import com.example.todoapp.databinding.FragmentMainBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -47,13 +49,32 @@ class MainFragment : Fragment(R.layout.fragment_main), ItemAdapter.OnItemClickLi
             viewModel.addItemClick()
         }
 
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val item = itemAdapter.currentList[viewHolder.adapterPosition]
+                viewModel.onItemSwiped(item)
+            }
+        }).attachToRecyclerView(binding.recyclerView)
+
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.events.collect {
-                when (it) {
+            viewModel.events.collect { event ->
+                when (event) {
                     is MainFragmentViewModel.MainFragmentEvents.NavigateToAddEditScreen -> {
                         val navigateToAddEditScreenAction =
                             MainFragmentDirections.actionMainFragmentToAddEditFragment(
-                                it.item
+                                event.item
                             )
                         findNavController().navigate(navigateToAddEditScreenAction)
                     }
@@ -63,11 +84,25 @@ class MainFragment : Fragment(R.layout.fragment_main), ItemAdapter.OnItemClickLi
                         findNavController().navigate(navigateToDeleteAllDialog)
                     }
                     is MainFragmentViewModel.MainFragmentEvents.ShowCannotDeleteMessage -> {
-                        Toast.makeText(
-                            requireContext(),
+                        val snackBar = Snackbar.make(
+                            requireView(),
                             resources.getString(R.string.cannot_delete_message),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snackBar.anchorView = binding.fabAdd
+                        snackBar.show()
+                    }
+                    is MainFragmentViewModel.MainFragmentEvents.ShowUndoDeleteMessage -> {
+                        val snackBar = Snackbar.make(
+                            requireView(),
+                            resources.getString(R.string.deleted),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackBar.setAction(resources.getString(R.string.undo)) {
+                            viewModel.onUndoDelete(event.item)
+                        }
+                        snackBar.anchorView = binding.fabAdd
+                        snackBar.show()
                     }
                 }
             }

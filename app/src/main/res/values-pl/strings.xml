@@ -32,4 +32,6 @@
     <string name="dark">Ciemny</string>
     <string name="light">Jasny</string>
     <string name="settings">Ustawienia</string>
+    <string name="deleted">Usunięto</string>
+    <string name="undo">Przywróć</string>
 </resources>

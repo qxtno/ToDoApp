@@ -56,11 +56,23 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
+    fun onItemSwiped(item: Item) = viewModelScope.launch {
+        itemDao.deleteItem(item)
+        eventChannel.send(
+            MainFragmentEvents.ShowUndoDeleteMessage(item)
+        )
+    }
+
+    fun onUndoDelete(item: Item) = viewModelScope.launch {
+        itemDao.insertItem(item)
+    }
+
     sealed class MainFragmentEvents {
         data class NavigateToAddEditScreen(val item: Item?) :
             MainFragmentEvents()
 
         object NavigateToDeleteAllDialog : MainFragmentEvents()
         object ShowCannotDeleteMessage : MainFragmentEvents()
+        data class ShowUndoDeleteMessage(val item: Item) : MainFragmentEvents()
     }
 }
