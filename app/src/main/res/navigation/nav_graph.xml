@@ -46,8 +46,8 @@
     <dialog
         android:id="@+id/deleteAllDialog"
         android:name="com.example.todoapp.ui.items.deleteall.DeleteAllCompletedDialog" />
-    <fragment
+    <dialog
         android:id="@+id/settingsFragment"
-        android:name="com.example.todoapp.ui.settings.SettingsFragment"
+        android:name="com.example.todoapp.ui.settings.SettingsDialog"
         android:label="@string/settings" />
 </navigation>

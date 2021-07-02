@@ -11,18 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_theme"
-        android:textColor="@color/font_color"
-        android:textSize="18sp"
+        android:textColor="@color/design_default_color_secondary_variant"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/theme_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="8dp"
-        android:paddingTop="8dp"
+        android:paddingTop="4dp"
         android:paddingEnd="8dp"
         android:paddingBottom="16dp"
         android:textColor="@color/font_color"

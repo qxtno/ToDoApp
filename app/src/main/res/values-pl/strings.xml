@@ -28,8 +28,8 @@
     <string name="tasks">Zadania</string>
     <string name="save_new_item">Zapisz nowy element</string>
     <string name="app_theme">Motyw</string>
-    <string name="auto">Motyw systemowy</string>
-    <string name="dark">Motyw ciemny</string>
-    <string name="light">Motyw jasny</string>
+    <string name="auto">Systemowy</string>
+    <string name="dark">Ciemny</string>
+    <string name="light">Jasny</string>
     <string name="settings">Ustawienia</string>
 </resources>

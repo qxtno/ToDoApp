@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsFragmentViewModel @Inject constructor(
+class SettingsDialogViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
     val themeFlow = preferencesManager.themeFlow.asLiveData()
