@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -19,22 +19,22 @@ enum class Theme {
 @Singleton
 class PreferencesManager @Inject constructor(@ApplicationContext val context: Context) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-    private val themeKey = intPreferencesKey("themeKey")
+    private val themeKey = stringPreferencesKey("themeKey")
 
     suspend fun updateTheme(theme: Theme) {
         context.dataStore.edit { settings ->
             settings[themeKey] = when (theme) {
-                Theme.AUTO -> 0
-                Theme.DARK -> 1
-                Theme.LIGHT -> 2
+                Theme.AUTO -> Theme.AUTO.name
+                Theme.DARK -> Theme.DARK.name
+                Theme.LIGHT -> Theme.LIGHT.name
             }
         }
     }
 
     val themeFlow: Flow<Theme> = context.dataStore.data.map { settings ->
         when (settings[themeKey]) {
-            1 -> Theme.DARK
-            2 -> Theme.LIGHT
+            Theme.DARK.name -> Theme.DARK
+            Theme.LIGHT.name -> Theme.LIGHT
             else -> Theme.AUTO
         }
     }
