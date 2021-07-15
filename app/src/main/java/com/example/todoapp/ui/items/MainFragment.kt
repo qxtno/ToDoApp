@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.database.model.Item
 import com.example.todoapp.databinding.FragmentMainBinding
+import com.example.todoapp.utils.SortOrder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -24,7 +27,9 @@ import kotlinx.coroutines.launch
 class MainFragment : Fragment(R.layout.fragment_main), ItemAdapter.OnItemClickListener {
     private lateinit var binding: FragmentMainBinding
     private val viewModel: MainFragmentViewModel by viewModels()
+    private lateinit var searchView: SearchView
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMainBinding.bind(view)
@@ -119,9 +124,29 @@ class MainFragment : Fragment(R.layout.fragment_main), ItemAdapter.OnItemClickLi
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu, inflater)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        searchView = searchItem.actionView as SearchView
+
+        val query = viewModel.searchQuery.value
+        if (query != null && query.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(query, false)
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.searchQuery.value = newText
+                return true
+            }
+        })
     }
 
+    @ExperimentalCoroutinesApi
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_delete_completed -> {
@@ -133,6 +158,12 @@ class MainFragment : Fragment(R.layout.fragment_main), ItemAdapter.OnItemClickLi
                 val navigateToSettingsScreen =
                     MainFragmentDirections.actionMainFragmentToSettingsFragment()
                 findNavController().navigate(navigateToSettingsScreen)
+            }
+            R.id.action_sort_asc -> {
+                viewModel.updateSortOrder(SortOrder.ASC)
+            }
+            R.id.action_sort_desc -> {
+                viewModel.updateSortOrder(SortOrder.DESC)
             }
         }
         return super.onOptionsItemSelected(item)

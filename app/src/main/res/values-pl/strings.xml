@@ -34,4 +34,8 @@
     <string name="settings">Ustawienia</string>
     <string name="deleted">Usunięto</string>
     <string name="undo">Przywróć</string>
+    <string name="search">Szukaj</string>
+    <string name="sort">Sortowanie</string>
+    <string name="ascending">Rosnąco</string>
+    <string name="descending">Malejąco</string>
 </resources>

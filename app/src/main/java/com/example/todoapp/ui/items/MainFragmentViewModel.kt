@@ -1,24 +1,40 @@
 package com.example.todoapp.ui.items
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.todoapp.database.dao.ItemDao
 import com.example.todoapp.database.model.Item
+import com.example.todoapp.utils.PreferencesManager
+import com.example.todoapp.utils.SortOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainFragmentViewModel @Inject constructor(
-    private val itemDao: ItemDao
+    private val itemDao: ItemDao,
+    state: SavedStateHandle,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
     private val eventChannel = Channel<MainFragmentEvents>()
     val events = eventChannel.receiveAsFlow()
 
-    val items = itemDao.getAllItems().asLiveData()
+    val searchQuery = state.getLiveData("searchQuery", "")
+
+    @ExperimentalCoroutinesApi
+    private val itemsFlow =
+        combine(searchQuery.asFlow(), preferencesManager.sortFlow) { query, sortOrder ->
+            Pair(query, sortOrder)
+        }.flatMapLatest { (query, sortOrder) ->
+            itemDao.getItems(query, sortOrder)
+        }
+
+    @ExperimentalCoroutinesApi
+    val items = itemsFlow.asLiveData()
 
     fun addItemClick() = viewModelScope.launch {
         eventChannel.send(
@@ -36,6 +52,7 @@ class MainFragmentViewModel @Inject constructor(
         itemDao.updateItem(item.copy(completed = isChecked))
     }
 
+    @ExperimentalCoroutinesApi
     fun onDeleteAllClick() = viewModelScope.launch {
         var areItemsSelected = false
 
@@ -65,6 +82,10 @@ class MainFragmentViewModel @Inject constructor(
 
     fun onUndoDelete(item: Item) = viewModelScope.launch {
         itemDao.insertItem(item)
+    }
+
+    fun updateSortOrder(sortOrder: SortOrder) = viewModelScope.launch {
+        preferencesManager.updateSortOrder(sortOrder)
     }
 
     sealed class MainFragmentEvents {

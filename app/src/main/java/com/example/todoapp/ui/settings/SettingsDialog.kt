@@ -8,6 +8,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import com.example.todoapp.R
 import com.example.todoapp.databinding.DialogSettingsBinding
+import com.example.todoapp.ui.MainActivity
 import com.example.todoapp.utils.Theme
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +29,7 @@ class SettingsDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DialogSettingsBinding.bind(view)
+        (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.tasks)
 
         binding.apply {
             viewModel.themeFlow.observe(viewLifecycleOwner) {

@@ -16,10 +16,15 @@ enum class Theme {
     AUTO, DARK, LIGHT
 }
 
+enum class SortOrder {
+    ASC, DESC
+}
+
 @Singleton
 class PreferencesManager @Inject constructor(@ApplicationContext val context: Context) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
     private val themeKey = stringPreferencesKey("themeKey")
+    private val sortKey = stringPreferencesKey("sortKey")
 
     suspend fun updateTheme(theme: Theme) {
         context.dataStore.edit { settings ->
@@ -36,6 +41,22 @@ class PreferencesManager @Inject constructor(@ApplicationContext val context: Co
             Theme.DARK.name -> Theme.DARK
             Theme.LIGHT.name -> Theme.LIGHT
             else -> Theme.AUTO
+        }
+    }
+
+    suspend fun updateSortOrder(sortOrder: SortOrder) {
+        context.dataStore.edit { settings ->
+            settings[sortKey] = when (sortOrder) {
+                SortOrder.ASC -> SortOrder.ASC.name
+                SortOrder.DESC -> SortOrder.DESC.name
+            }
+        }
+    }
+
+    val sortFlow: Flow<SortOrder> = context.dataStore.data.map { settings ->
+        when (settings[sortKey]) {
+            SortOrder.DESC.name -> SortOrder.DESC
+            else -> SortOrder.ASC
         }
     }
 }
